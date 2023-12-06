@@ -1,8 +1,8 @@
 // index.js
 
 const axios = require('axios');
-
-const serverUrl = 'http://your-server-url:3000'; // Replace with your actual server URL
+const weatherData = require("./weather.json");
+const serverUrl = 'PORT'; // Replace with your actual server URL
 
 // Function to get weather data from the server
 async function getWeatherData(latitude, longitude) {
