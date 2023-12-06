@@ -1,31 +1,46 @@
-'use strict';
+"use strict";
 
-// this library lets us access our .env file
-require('dotenv').config();
-
-// express is a server library
-const express = require('express');
-
-// initalizes the express library
+require("dotenv").config();
+const weatherData = require("./weather.json");
+const express = require("express");
+const cors = require("cors");
 const app = express();
 
-// library that determines who is allowed to speak to our server
-const cors = require('cors');
-
-// this settting says that everyone is allowed to speak to our server
 app.use(cors());
 
-// we are getting the port variable from the .env file.
-const PORT = process.env.PORT;
+class Forecast {
+  constructor(date, description) {
+    this.date = date;
+    this.description = description;
+  }
+}
 
-// this is a route. if you turn the server on and go to http://localhost:3001/ (or whatever port you specified in your .env), you will see 'hello from the home route'
-app.get('/', (request, response) => {
-  response.send('hello from the home route');
+const PORT = process.env.PORT || 3000;
+
+app.get("/", (request, response) => {
+  console.log(request.query);
+  // chatGPT helped with this
+  let userLat = request.query.latitude;
+  let userLon = request.query.longitude;
+
+  if (userLat && userLon) {
+    let userCity = weatherData.find(
+      (city) => city.lon === userLon && city.lat === userLat
+    );
+    if (userCity) {
+      console.log(userCity.data);
+
+      const forecastArray = userCity.data.map((day) => {
+        const date = day.valid_date;
+        const description = day.weather.description;
+        return new Forecast(date, description);
+      });
+      response.json({ "CityName": userCity.city_name, "forecast": forecastArray });
+    }
+  } else {
+    console.log("didn't work bro");
+  }
 });
 
-// this turns the server on to the port that you specifed in your .env file
-app.listen(PORT, () => console.log(`listening on ${PORT}`));
-
-app.get('/', (request, response) => {
-    response.send('You are connected');
-  });
+// Starting the sever
+app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
