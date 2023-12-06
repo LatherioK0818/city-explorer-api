@@ -23,7 +23,7 @@ function App() {
     grabCityData(userCity);
   }
 
-   async function grabCityData(cityName) {
+  async function grabCityData(cityName) {
     let url = `https://us1.locationiq.com/v1/search?key=${API_KEY}&q=${cityName}&format=json`;
     try {
       let response = await axios.get(url);
@@ -32,7 +32,7 @@ function App() {
       setSelectedCity(response.data[0].display_name);
       setLatitude(response.data[0].lat);
       setLongitude(response.data[0].lon);
-      grabWeatherData(response.data[0].lat,response.data[0].lon);
+      grabWeatherData(response.data[0].lat, response.data[0].lon);
     } catch (error) {
       setShow(true);
       let errorMessage = error.message;
@@ -45,8 +45,8 @@ function App() {
   async function grabWeatherData(latitude, longitude) {
     try {
       console.log(latitude, longitude);
-      let response = await axios.get( SERVER, {params: {"latitude": latitude, "longitude": longitude}});
-      const {CityName, forecast} = response.data;
+      let response = await axios.get(SERVER, { params: { "latitude": latitude, "longitude": longitude } });
+      const { CityName, forecast } = response.data;
       console.log("CityName:", CityName);
       console.log("forecast:", forecast);
       setWeather(forecast);
@@ -60,7 +60,7 @@ function App() {
   return (
     <>
       <div className="body">
-      <Header />
+        <Header />
         <CityForm
           latitude={latitude}
           longitude={longitude}
@@ -73,8 +73,8 @@ function App() {
           latitude={latitude}
           longitude={longitude}
         />
-        <Weather weather={weather} selectedCity={selectedCity}/>
-        <Error show={show} errorMessage={error}/>
+        <Weather weather={weather} selectedCity={selectedCity} />
+        <Error show={show} errorMessage={error} />
       </div>
     </>
   );
