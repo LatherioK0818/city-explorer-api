@@ -1,9 +1,11 @@
-"use strict";
+// server.js
 
-require("dotenv").config();
-const weatherData = require("./weather.json");
-const express = require("express");
-const cors = require("cors");
+'use strict';
+
+require('dotenv').config();
+const weatherData = require('./weather.json');
+const express = require('express');
+const cors = require('cors');
 const app = express();
 
 app.use(cors());
@@ -17,9 +19,8 @@ class Forecast {
 
 const PORT = process.env.PORT || 3000;
 
-app.get("/", (request, response) => {
+app.get('/', (request, response) => {
   console.log(request.query);
-  // chatGPT helped with this
   let userLat = request.query.latitude;
   let userLon = request.query.longitude;
 
@@ -35,12 +36,11 @@ app.get("/", (request, response) => {
         const description = day.weather.description;
         return new Forecast(date, description);
       });
-      response.json({ "CityName": userCity.city_name, "forecast": forecastArray });
+      response.json({ 'CityName': userCity.city_name, 'forecast': forecastArray });
     }
   } else {
-    console.log("didn't work bro");
+    console.log("Didn't work bro");
   }
 });
 
-// Starting the sever
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
